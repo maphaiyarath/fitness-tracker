@@ -13,6 +13,8 @@ module.exports = function(app) {
         });
     });
 
+    // validate: [({ length }) => length >= 6, "Password should be longer."]
+
     // get api workouts
     app.get("/api/workouts", (req, res) => {
         db.Workout.aggregate([

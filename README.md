@@ -14,13 +14,16 @@ You can demo the app [here](https://maphaiyarath-fitness-tracker.herokuapp.com/)
 * [Contributing](#contributing)
 
 ## Description
-As a user, I want to be able to view create and track daily workouts. I want to be able to log multiple exercises in a workout on a given day. If the exercise is a cardio exercise, I should be able to track my distance traveled. A consumer will reach their fitness goals more quickly when they track their workout progress.
+Reach your fitness goals more quickly with this Fitness Tracker to document your progress! This app was created with a Mongo database, uses a Mongoose schema, and handles routes with Express.
 
-When the user loads the page, they should be given the option to create a new workout or continue with their last workout. The user should be able to:
-- Add exercises to the most recent workout plan.
-- Add new exercises to a new workout plan.
-- View the combined weight of multiple exercises from the past seven workouts on the stats page.
-- View the total duration of each workout from the past seven workouts on the stats page.
+On the fitness tracker page, you can create workouts by:
+- continuing to add exercises to your last workout
+- adding exercises to a new workout
+
+On the dashboard, you can view some stats, such as:
+- the combined weight of multiple exercises
+- the total duration of each workout
+- which exercises were performed
 
 ## Installation
 Use the following command for installation:
