@@ -2,15 +2,6 @@ const db = require("../models/");
 
 module.exports = function(app) {
 
-    // get api workouts
-	app.get("/api/workouts", (req, res) => {
-        db.Workout.find({}).then(dbWorkout => {
-            res.json(dbWorkout);
-        }).catch(err => {
-            res.json(err);
-        });
-    });
-
     // post api workouts
     app.post("/api/workouts", ({ body }, res) => {
         db.Workout.create(body).then(dbWorkout => {
@@ -20,9 +11,30 @@ module.exports = function(app) {
         });
     });
 
-    // get api workouts range
+        // get api workouts
+	app.get("/api/workouts", (req, res) => {
+        db.Workout.find({}).then(dbWorkout => {
+            res.json(dbWorkout);
+        }).catch(err => {
+            res.json(err);
+        });
+    });
 
     // put api workouts id
+    app.put("/api/workouts/:id", function(req, res) {
+        db.Workout.updateOne(
+            { _id : req.params.id },
+            { $push: { exercises: req.body } }
+        ).then(function(dbWorkout) {
+            res.json(dbWorkout);
+        }).catch(err => {
+            res.json(err);
+        });
+    });
+
+    // get api workouts range
+
+
 
 /*
     app.post("/submit", ({body}, res) => {
@@ -58,16 +70,5 @@ module.exports = function(app) {
             res.json(err);
         });
     });
-    */
-
-    /*
-  app.put("/api/images/:id", function(req, res) {
-    db.Image.updateOne(
-      { _id: req.params.id },
-      { rating: req.body.rating }
-    ).then(function(dbImage) {
-      res.json(dbImage);
-    });
-  });
     */
 };
