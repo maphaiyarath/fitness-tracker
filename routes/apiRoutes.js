@@ -11,7 +11,7 @@ module.exports = function(app) {
         });
     });
 
-        // get api workouts
+    // get api workouts
 	app.get("/api/workouts", (req, res) => {
         db.Workout.find({}).then(dbWorkout => {
             res.json(dbWorkout);
@@ -33,7 +33,13 @@ module.exports = function(app) {
     });
 
     // get api workouts range
-
+    app.get("/api/workouts/range", (req, res) => {
+        db.Workout.find({}).sort({ 'day' : -1 }).limit(7).then(dbWorkout => {
+            res.json(dbWorkout.reverse());
+        }).catch(err => {
+            res.json(err);
+        });
+    });
 
 
 /*
@@ -48,14 +54,6 @@ module.exports = function(app) {
     });
 
     app.get("/api/workouts/:id", (req, res) => {
-        Workout.find({}).then(dbWorkout => {
-            res.json(dbWorkout);
-        }).catch(err => {
-            res.json(err);
-        });
-    });
-
-    app.get("/api/workouts/range", (req, res) => {
         Workout.find({}).then(dbWorkout => {
             res.json(dbWorkout);
         }).catch(err => {
