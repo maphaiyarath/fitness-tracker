@@ -21,9 +21,10 @@ On the fitness tracker page, you can create workouts by:
 - adding exercises to a new workout
 
 On the dashboard, you can view some stats, such as:
-- the combined weight of multiple exercises
-- the total duration of each workout
-- which exercises were performed
+- the duration of each workout
+- the combined weight of resistance exercises from each workout
+- the durations of each exercise performed
+- the max pounds lifted of resistance exercises
 
 ## Installation
 Use the following command for installation:
