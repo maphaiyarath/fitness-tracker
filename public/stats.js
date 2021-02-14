@@ -22,10 +22,12 @@ function generatePalette() {
 }
 
 function populateChart(data) {
-  //console.log(data)
+  let workouts = workoutNames(data);
+  let combinedDurs = calculateDurations(workouts, data);
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalWeight(data);
-  let workouts = workoutNames(data);
+  let maxPounds = calculateMaxWeight(data);
+  let maxPoundsData = maxPounds.thePounds, maxPoundsLabels = maxPounds.theLabels;
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -65,7 +67,7 @@ function populateChart(data) {
     options: {
       responsive: true,
       title: {
-        text: 'Workout Durations',
+        text: 'Workout Duration',
         display: true,
       },
       scales: {
@@ -142,14 +144,14 @@ function populateChart(data) {
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: durations,
+          data: combinedDurs,
         },
       ],
     },
     options: {
       title: {
         display: true,
-        text: 'Durations of Exercises Performed',
+        text: 'Duration of Exercises Performed (minutes)',
       },
     },
   });
@@ -157,48 +159,93 @@ function populateChart(data) {
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
-      labels: workouts,
+      labels: maxPoundsLabels,
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: pounds,
+          data: maxPoundsData,
         },
       ],
     },
     options: {
       title: {
         display: true,
-        text: 'Pounds Lifted During Exercises Performed',
+        text: 'Max Pounds Lifted of Resistance Exercises',
       },
     },
   });
 }
-/*
-function calculateDurations(data) {
-  let totals = [];
 
-  data.forEach((workout) => {
-    // console.log(workout);
-    const workoutTotal = workout.exercises.reduce((total, { type, weight }) => {
-      if (type === 'resistance') {
-        return total + weight;
-      } else {
-        return total;
-      }
-    }, 0);
-    console.log(totals);
-    totals.push(workoutTotal);
+function calculateDurations(exerciseNames, data) {
+  let durTotals = [];
+
+  // create an array made of unique exercise names and a default duration of 0
+  exerciseNames.forEach((name) => {
+    durTotals.push({
+      workoutName: name,
+      duration: 0
+    });
   });
 
-  return totals;
+  // for each exercise in a workout, update the duration
+  data.forEach((workout) => {
+    workout.exercises.forEach((exercise) => {
+      // find the object in the durTotals with the same name
+      let durTotalObj = durTotals.find(obj => obj.workoutName === exercise.name);
+
+      // add onto the duration
+      durTotalObj.duration += exercise.duration;
+    });
+  });
+
+  // just get the duration values and put them into an array
+  let actualVals = [];
+  durTotals.forEach((obj) => {
+    actualVals.push(obj.duration);
+  });
+
+  return actualVals;
 }
-*/
+
+function calculateMaxWeight(data) {
+  let maxes = [];
+
+  // for each exercise in a workout, check to see if it's resistance
+  data.forEach((workout) => {
+    workout.exercises.forEach((exercise) => {
+      if (exercise.type === 'resistance') {
+        // if found in maxes array, update max if greater
+        let found = maxes.find(obj => obj.label === exercise.name);
+        if (found) {
+          if (exercise.weight > found.lb) {
+            found.lb = exercise.weight;
+          }
+        // otherwise, add new exercise/weight
+        } else {
+          maxes.push({
+            label: exercise.name,
+            lb: exercise.weight
+          });
+        }
+      }
+    });
+  });
+
+  // get the values we need
+  let thePounds = [], theLabels = [];
+  maxes.forEach((max) => {
+    thePounds.push(max.lb);
+    theLabels.push(max.label);
+  });
+
+  return { thePounds, theLabels };
+}
+
 function calculateTotalWeight(data) {
   let totals = [];
 
   data.forEach((workout) => {
-    // console.log(workout);
     const workoutTotal = workout.exercises.reduce((total, { type, weight }) => {
       if (type === 'resistance') {
         return total + weight;
@@ -206,7 +253,6 @@ function calculateTotalWeight(data) {
         return total;
       }
     }, 0);
-    console.log(totals);
     totals.push(workoutTotal);
   });
 
