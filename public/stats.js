@@ -22,6 +22,7 @@ function generatePalette() {
 }
 
 function populateChart(data) {
+  //console.log(data)
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalWeight(data);
   let workouts = workoutNames(data);
@@ -64,6 +65,7 @@ function populateChart(data) {
     options: {
       responsive: true,
       title: {
+        text: 'Workout Durations',
         display: true,
       },
       scales: {
@@ -147,7 +149,7 @@ function populateChart(data) {
     options: {
       title: {
         display: true,
-        text: 'Exercises Performed',
+        text: 'Durations of Exercises Performed',
       },
     },
   });
@@ -167,16 +169,17 @@ function populateChart(data) {
     options: {
       title: {
         display: true,
-        text: 'Exercises Performed',
+        text: 'Pounds Lifted During Exercises Performed',
       },
     },
   });
 }
-
-function calculateTotalWeight(data) {
+/*
+function calculateDurations(data) {
   let totals = [];
 
   data.forEach((workout) => {
+    // console.log(workout);
     const workoutTotal = workout.exercises.reduce((total, { type, weight }) => {
       if (type === 'resistance') {
         return total + weight;
@@ -184,7 +187,26 @@ function calculateTotalWeight(data) {
         return total;
       }
     }, 0);
+    console.log(totals);
+    totals.push(workoutTotal);
+  });
 
+  return totals;
+}
+*/
+function calculateTotalWeight(data) {
+  let totals = [];
+
+  data.forEach((workout) => {
+    // console.log(workout);
+    const workoutTotal = workout.exercises.reduce((total, { type, weight }) => {
+      if (type === 'resistance') {
+        return total + weight;
+      } else {
+        return total;
+      }
+    }, 0);
+    console.log(totals);
     totals.push(workoutTotal);
   });
 

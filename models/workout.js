@@ -8,10 +8,12 @@ const exerciseSchema = new Schema({
     },
     name: {
         type: String,
+        trim: true,
         required: "Name is required"
     },
     duration: {
         type: Number,
+        trim: true,
         required: "Duration is required"
     },
     weight: Number,
@@ -24,7 +26,8 @@ const exerciseSchema = new Schema({
 
 const workoutSchema = new Schema({
     day: {
-        type: Date
+        type: Date,
+        default: Date.now()
     },
     exercises: [exerciseSchema]
 });
